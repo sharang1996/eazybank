@@ -3,6 +3,7 @@ package com.eazybytes.accounts.controller;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.dto.ResponseDto;
 import com.eazybytes.accounts.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,15 @@ public class AccountController {
     public ResponseEntity<CustomerDto> fetchAccount(@RequestParam String mobileNumber){
         return ResponseEntity.ok()
                         .body(accountService.fetchAccount(mobileNumber));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody CustomerDto customerDto) {
+        accountService.updateAccount(customerDto);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(String.valueOf(HttpStatus.OK.value()), HttpStatus.OK.getReasonPhrase()));
     }
 
 }

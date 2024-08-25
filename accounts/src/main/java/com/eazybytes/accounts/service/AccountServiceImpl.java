@@ -4,6 +4,7 @@ import com.eazybytes.accounts.dto.AccountDto;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.entity.Account;
 import com.eazybytes.accounts.entity.Customer;
+import com.eazybytes.accounts.exception.AccountDetailsNotPopulatedException;
 import com.eazybytes.accounts.exception.CustomerAlreadyExistsException;
 import com.eazybytes.accounts.exception.ResourceNotFoundException;
 import com.eazybytes.accounts.mapper.AccountMapper;
@@ -21,6 +22,8 @@ import java.util.Random;
 public class AccountServiceImpl implements AccountService {
     public static final String SAVINGS = "Savings";
     public static final String BRANCH_ADDRESS = "123 Main Street, New York";
+
+    private static final Random RANDOM = new Random();
     AccountRepository accountRepository;
     CustomerRepository customerRepository;
     @Override
@@ -46,14 +49,47 @@ public class AccountServiceImpl implements AccountService {
         );
 
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
-        customerDto.setAccountDto(AccountMapper.mapToAccountsDto(account, new AccountDto()));
+        customerDto.setAccountDto(AccountMapper.mapToAccountDto(account, new AccountDto()));
         return customerDto;
+    }
+
+    @Override
+    public void updateAccount(CustomerDto customerDto) {
+        AccountDto accountDto = customerDto.getAccountDto();
+        if(accountDto == null){
+            throw new AccountDetailsNotPopulatedException(String.format("Account details not populated for customer %s with mobile number %s", customerDto.getName(), customerDto.getMobileNumber()));
+        }
+        Account account = retrieveExistingAccount(accountDto);
+        AccountMapper.mapToAccount(accountDto, account);
+        accountRepository.save(account);
+
+        updateCustomer(customerDto);
+    }
+
+    private void updateCustomer(CustomerDto customerDto) {
+        Customer customer = retrieveExistingCustomer(customerDto);
+        CustomerMapper.mapToCustomer(customerDto, customer);
+        customerRepository.save(customer);
+    }
+
+    private Account retrieveExistingAccount(AccountDto accountDto) {
+        Long accountNumber = accountDto.getAccountNumber();
+        return accountRepository.findById(accountNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "AccountNumber", accountNumber.toString())
+        );
+    }
+
+    private Customer retrieveExistingCustomer(CustomerDto customerDto) {
+        String mobileNumber = customerDto.getMobileNumber();
+        return customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "MobileNumber", mobileNumber)
+        );
     }
 
     private Account createNewAccount(Customer customer) {
         Account newAccount = new Account();
         newAccount.setCustomerId(customer.getCustomerId());
-        long randomAccNumber = 1000000000L + new Random().nextInt(900000000);
+        long randomAccNumber = 1000000000L + RANDOM.nextInt(900000000);
 
         newAccount.setAccountNumber(randomAccNumber);
         newAccount.setAccountType(SAVINGS);
