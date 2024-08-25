@@ -25,13 +25,14 @@ public class AccountServiceImpl implements AccountService {
     private static final Random RANDOM = new Random();
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
+
     @Override
     public void createAccount(CustomerDto customerDto) {
         Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
         Optional<Customer> existingCustomer = customerRepository.findByMobileNumber(customer.getMobileNumber());
-        if(existingCustomer.isPresent()){
+        if (existingCustomer.isPresent()) {
             throw new CustomerAlreadyExistsException("Customer already registered with given mobileNumber "
-                    +customerDto.getMobileNumber());
+                    + customerDto.getMobileNumber());
         }
 
         Customer savedCustomer = customerRepository.save(customer);
@@ -41,10 +42,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public CustomerDto fetchAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
-                ()->new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+                () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
         );
         Account account = accountRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
-                ()->new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
+                () -> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
         );
 
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
@@ -55,13 +56,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateAccount(CustomerDto customerDto) {
         AccountDto accountDto = customerDto.getAccountDto();
-        if(accountDto == null){
+        if (accountDto == null) {
             throw new AccountDetailsNotPopulatedException(String.format("Account details not populated for customer %s with mobile number %s", customerDto.getName(), customerDto.getMobileNumber()));
         }
         Account account = retrieveExistingAccount(accountDto);
         Customer customer = retrieveExistingCustomer(customerDto);
-        if(customer.getCustomerId().longValue() != account.getCustomerId().longValue()){
-            throw new CustomerAccountMismatchException(String.format("Account number %s provided do not match with customer records for customer %s with mobile number %s",account.getAccountNumber(), customerDto.getName(), customerDto.getMobileNumber()));
+        if (customer.getCustomerId().longValue() != account.getCustomerId().longValue()) {
+            throw new CustomerAccountMismatchException(String.format("Account number %s provided do not match with customer records for customer %s with mobile number %s", account.getAccountNumber(), customerDto.getName(), customerDto.getMobileNumber()));
         }
         AccountMapper.mapToAccount(accountDto, account);
         accountRepository.save(account);
@@ -72,12 +73,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
-                ()->new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+                () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
         );
-        try{
+        try {
             accountRepository.deleteByCustomerId(customer.getCustomerId());
             customerRepository.deleteById(customer.getCustomerId());
-        } catch (DataAccessException exception){
+        } catch (DataAccessException exception) {
             throw new InternalServerException(exception.getCause(), exception.getMessage());
         }
     }

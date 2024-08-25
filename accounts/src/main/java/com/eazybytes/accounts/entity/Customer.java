@@ -7,7 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter @ToString @RequiredArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class Customer extends BaseEntity {
 
     @Id

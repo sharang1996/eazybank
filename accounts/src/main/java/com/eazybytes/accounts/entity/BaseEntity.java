@@ -14,7 +14,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public class BaseEntity {
     @CreatedDate
     @Column(updatable = false)
