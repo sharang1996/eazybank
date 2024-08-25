@@ -9,7 +9,7 @@ import com.eazybytes.accounts.mapper.AccountMapper;
 import com.eazybytes.accounts.mapper.CustomerMapper;
 import com.eazybytes.accounts.repository.AccountRepository;
 import com.eazybytes.accounts.repository.CustomerRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +17,14 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     public static final String SAVINGS = "Savings";
     public static final String BRANCH_ADDRESS = "123 Main Street, New York";
 
     private static final Random RANDOM = new Random();
-    AccountRepository accountRepository;
-    CustomerRepository customerRepository;
+    private final AccountRepository accountRepository;
+    private final CustomerRepository customerRepository;
     @Override
     public void createAccount(CustomerDto customerDto) {
         Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
