@@ -9,4 +9,6 @@ public interface AccountService {
     CustomerDto fetchAccount(String mobileNumber);
 
     void updateAccount(CustomerDto customerDto);
+
+    void deleteAccount(String mobileNumber);
 }

@@ -4,15 +4,13 @@ import com.eazybytes.accounts.dto.AccountDto;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.entity.Account;
 import com.eazybytes.accounts.entity.Customer;
-import com.eazybytes.accounts.exception.AccountDetailsNotPopulatedException;
-import com.eazybytes.accounts.exception.CustomerAccountMismatchException;
-import com.eazybytes.accounts.exception.CustomerAlreadyExistsException;
-import com.eazybytes.accounts.exception.ResourceNotFoundException;
+import com.eazybytes.accounts.exception.*;
 import com.eazybytes.accounts.mapper.AccountMapper;
 import com.eazybytes.accounts.mapper.CustomerMapper;
 import com.eazybytes.accounts.repository.AccountRepository;
 import com.eazybytes.accounts.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -69,6 +67,19 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
 
         updateCustomer(customerDto, customer);
+    }
+
+    @Override
+    public void deleteAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                ()->new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+        );
+        try{
+            accountRepository.deleteByCustomerId(customer.getCustomerId());
+            customerRepository.deleteById(customer.getCustomerId());
+        } catch (DataAccessException exception){
+            throw new InternalServerException(exception.getCause(), exception.getMessage());
+        }
     }
 
     private void updateCustomer(CustomerDto customerDto, Customer customer) {
