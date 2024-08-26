@@ -20,8 +20,8 @@ public class LoanDto {
   @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
   private String mobileNumber;
 
-  @Schema(description = "Loan Number of the customer", example = "1234567887654321")
-  @Pattern(regexp = "(^$|[0-9]{16})", message = "Card number must be 16 digits")
+  @Schema(description = "Loan Number of the customer", example = "123456788765")
+  @Pattern(regexp = "(^$|[0-9]{12})", message = "Loan number must be 12 digits")
   private String loanNumber;
 
   @Schema(description = "Type of the Loan", example = "HOME")
