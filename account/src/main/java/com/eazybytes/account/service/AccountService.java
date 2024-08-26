@@ -4,11 +4,11 @@ import com.eazybytes.account.dto.CustomerDto;
 
 public interface AccountService {
 
-    void createAccount(CustomerDto customerDto);
+  void createAccount(CustomerDto customerDto);
 
-    CustomerDto fetchAccount(String mobileNumber);
+  CustomerDto fetchAccount(String mobileNumber);
 
-    void updateAccount(CustomerDto customerDto);
+  void updateAccount(CustomerDto customerDto);
 
-    void deleteAccount(String mobileNumber);
+  void deleteAccount(String mobileNumber);
 }

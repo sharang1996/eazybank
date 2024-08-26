@@ -1,4 +1,4 @@
-package com.eazybytes.card.entity;
+package com.eazybytes.loan.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Card extends BaseEntity {
+public class Loan extends BaseEntity {
   String mobileNumber;
-  String cardNumber;
-  String cardType;
-  double totalLimit;
-  double amountUsed;
+  String loanNumber;
+  String loanType;
+  double totalAmount;
+  double amountPaid;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long cardId;
+  private Long loanId;
 }

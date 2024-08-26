@@ -1,6 +1,6 @@
-package com.eazybytes.account.exception;
+package com.eazybytes.loan.exception;
 
-import com.eazybytes.account.dto.ErrorResponseDto;
+import com.eazybytes.loan.dto.ErrorResponseDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
@@ -33,33 +33,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(CustomerAlreadyExistsException.class)
+  @ExceptionHandler(LoanAlreadyExistsException.class)
   public ResponseEntity<ErrorResponseDto> handleCustomerAlreadyExistsException(
-      CustomerAlreadyExistsException exception, WebRequest webRequest) {
-    ErrorResponseDto errorResponseDTO =
-        new ErrorResponseDto(
-            webRequest.getDescription(false),
-            HttpStatus.BAD_REQUEST,
-            exception.getMessage(),
-            LocalDateTime.now());
-    return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(AccountDetailsNotPopulatedException.class)
-  public ResponseEntity<ErrorResponseDto> handleAccountDetailsNotPopulatedException(
-      AccountDetailsNotPopulatedException exception, WebRequest webRequest) {
-    ErrorResponseDto errorResponseDTO =
-        new ErrorResponseDto(
-            webRequest.getDescription(false),
-            HttpStatus.BAD_REQUEST,
-            exception.getMessage(),
-            LocalDateTime.now());
-    return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(CustomerAccountMismatchException.class)
-  public ResponseEntity<ErrorResponseDto> handleCustomerAccountMismatchException(
-      CustomerAccountMismatchException exception, WebRequest webRequest) {
+      LoanAlreadyExistsException exception, WebRequest webRequest) {
     ErrorResponseDto errorResponseDTO =
         new ErrorResponseDto(
             webRequest.getDescription(false),

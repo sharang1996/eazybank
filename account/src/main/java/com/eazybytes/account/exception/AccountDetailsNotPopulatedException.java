@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class AccountDetailsNotPopulatedException extends RuntimeException {
-    public AccountDetailsNotPopulatedException(String message) {
-        super(message);
-    }
+  public AccountDetailsNotPopulatedException(String message) {
+    super(message);
+  }
 }

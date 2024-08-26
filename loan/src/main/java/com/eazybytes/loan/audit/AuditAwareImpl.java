@@ -1,4 +1,4 @@
-package com.eazybytes.card.audit;
+package com.eazybytes.loan.audit;
 
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 public class AuditAwareImpl implements AuditorAware<String> {
   @Override
   public Optional<String> getCurrentAuditor() {
-    return Optional.of("CARD_MS");
+    return Optional.of("LOAN_MS");
   }
 }

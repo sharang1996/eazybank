@@ -1,9 +1,9 @@
-package com.eazybytes.account.controller;
+package com.eazybytes.loan.controller;
 
-import com.eazybytes.account.dto.CustomerDto;
-import com.eazybytes.account.dto.ErrorResponseDto;
-import com.eazybytes.account.dto.ResponseDto;
-import com.eazybytes.account.service.AccountService;
+import com.eazybytes.loan.dto.ErrorResponseDto;
+import com.eazybytes.loan.dto.LoanDto;
+import com.eazybytes.loan.dto.ResponseDto;
+import com.eazybytes.loan.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,19 +20,17 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
-    name = "CRUD REST APIs for Accounts in EazyBank",
-    description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE account details")
+    name = "CRUD REST APIs for Loans in EazyBank",
+    description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE loans details")
 @RequiredArgsConstructor
 @RestController
 @Validated
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AccountController {
+public class LoanController {
 
-  private final AccountService accountService;
+  private final LoanService loanService;
 
-  @Operation(
-      summary = "Create Account REST API",
-      description = "REST API to create new Customer & Account inside EazyBank")
+  @Operation(summary = "Create Loan REST API", description = "REST API to create new EazyBank Loan")
   @ApiResponses({
     @ApiResponse(responseCode = "201", description = "HTTP Status CREATED"),
     @ApiResponse(
@@ -41,8 +39,10 @@ public class AccountController {
         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
   @PostMapping("/create")
-  public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
-    accountService.createAccount(customerDto);
+  public ResponseEntity<ResponseDto> createLoan(
+      @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
+          String mobileNumber) {
+    loanService.createLoan(mobileNumber);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
             new ResponseDto(
@@ -50,8 +50,8 @@ public class AccountController {
   }
 
   @Operation(
-      summary = "Fetch Account Details REST API",
-      description = "REST API to fetch Customer & Account details based on a mobile number")
+      summary = "Fetch Loan Details REST API",
+      description = "REST API to fetch loan details based on a mobile number")
   @ApiResponses({
     @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
     @ApiResponse(
@@ -60,23 +60,22 @@ public class AccountController {
         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
   @GetMapping("/fetch")
-  public ResponseEntity<CustomerDto> fetchAccount(
+  public ResponseEntity<LoanDto> fetchLoan(
       @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
           String mobileNumber) {
-    return ResponseEntity.ok().body(accountService.fetchAccount(mobileNumber));
+    return ResponseEntity.ok().body(loanService.fetchLoan(mobileNumber));
   }
 
   @Operation(
-      summary = "Update Account Details REST API",
-      description = "REST API to update Customer &  Account details based on a account number")
+      summary = "Update Loan Details REST API",
+      description = "REST API to update loan details")
   @ApiResponses({
     @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
     @ApiResponse(responseCode = "400", description = "Bad Request")
   })
   @PutMapping("/update")
-  public ResponseEntity<ResponseDto> updateAccountDetails(
-      @Valid @RequestBody CustomerDto customerDto) {
-    accountService.updateAccount(customerDto);
+  public ResponseEntity<ResponseDto> updateLoanDetails(@Valid @RequestBody LoanDto loanDto) {
+    loanService.updateLoan(loanDto);
     return ResponseEntity.ok()
         .body(
             new ResponseDto(
@@ -84,8 +83,8 @@ public class AccountController {
   }
 
   @Operation(
-      summary = "Delete Account & Customer Details REST API",
-      description = "REST API to delete Customer &  Account details based on a mobile number")
+      summary = "Delete loan REST API",
+      description = "REST API to delete loan based on a mobile number")
   @ApiResponses({
     @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
     @ApiResponse(
@@ -94,10 +93,10 @@ public class AccountController {
         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
   @DeleteMapping("/delete")
-  public ResponseEntity<ResponseDto> deleteAccountDetails(
+  public ResponseEntity<ResponseDto> deleteLoanDetails(
       @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
           String mobileNumber) {
-    accountService.deleteAccount(mobileNumber);
+    loanService.deleteLoan(mobileNumber);
     return ResponseEntity.ok()
         .body(
             new ResponseDto(
