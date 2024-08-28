@@ -86,10 +86,15 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.2</version>
 				<configuration>
-					<image>
-						<name>sharanggupta/${project.artifactId}:1.0.0</name>
-					</image>
+					<to>
+						<image>sharanggupta/${project.artifactId}:1.0.0</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>

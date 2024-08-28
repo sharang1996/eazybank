@@ -8,11 +8,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,16 +31,19 @@ public class AccountController {
 
   private final AccountService accountService;
 
+  @Value("${build.version}")
+  private String buildVersion;
+
+  private final Environment environment;
+
   @Operation(
       summary = "Create Account REST API",
       description = "REST API to create new Customer & Account inside EazyBank")
-  @ApiResponses({
-    @ApiResponse(responseCode = "201", description = "HTTP Status CREATED"),
-    @ApiResponse(
-        responseCode = "400",
-        description = "HTTP Bad Request",
-        content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
-  })
+  @ApiResponse(responseCode = "201", description = "HTTP Status CREATED")
+  @ApiResponse(
+      responseCode = "400",
+      description = "HTTP Bad Request",
+      content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   @PostMapping("/create")
   public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
     accountService.createAccount(customerDto);
@@ -52,16 +56,14 @@ public class AccountController {
   @Operation(
       summary = "Fetch Account Details REST API",
       description = "REST API to fetch Customer & Account details based on a mobile number")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
-    @ApiResponse(
-        responseCode = "404",
-        description = "HTTP Status Not Found",
-        content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
-  })
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @ApiResponse(
+      responseCode = "404",
+      description = "HTTP Status Not Found",
+      content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   @GetMapping("/fetch")
   public ResponseEntity<CustomerDto> fetchAccount(
-      @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
+      @RequestParam @Pattern(regexp = "(^$|\\d{10})", message = "Mobile number must be 10 digits")
           String mobileNumber) {
     return ResponseEntity.ok().body(accountService.fetchAccount(mobileNumber));
   }
@@ -69,10 +71,8 @@ public class AccountController {
   @Operation(
       summary = "Update Account Details REST API",
       description = "REST API to update Customer &  Account details based on a account number")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
-    @ApiResponse(responseCode = "400", description = "Bad Request")
-  })
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @ApiResponse(responseCode = "400", description = "Bad Request")
   @PutMapping("/update")
   public ResponseEntity<ResponseDto> updateAccountDetails(
       @Valid @RequestBody CustomerDto customerDto) {
@@ -86,21 +86,37 @@ public class AccountController {
   @Operation(
       summary = "Delete Account & Customer Details REST API",
       description = "REST API to delete Customer &  Account details based on a mobile number")
-  @ApiResponses({
-    @ApiResponse(responseCode = "200", description = "HTTP Status OK"),
-    @ApiResponse(
-        responseCode = "404",
-        description = "HTTP Status Not Found",
-        content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
-  })
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @ApiResponse(
+      responseCode = "404",
+      description = "HTTP Status Not Found",
+      content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   @DeleteMapping("/delete")
   public ResponseEntity<ResponseDto> deleteAccountDetails(
-      @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
+      @RequestParam @Pattern(regexp = "(^$|\\d{10})", message = "Mobile number must be 10 digits")
           String mobileNumber) {
     accountService.deleteAccount(mobileNumber);
     return ResponseEntity.ok()
         .body(
             new ResponseDto(
                 String.valueOf(HttpStatus.OK.value()), HttpStatus.OK.getReasonPhrase()));
+  }
+
+  @Operation(
+      summary = "Fetch Build Version REST API",
+      description = "REST API to fetch Build Version")
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @GetMapping("/build-version")
+  public ResponseEntity<String> getBuildVersion() {
+    return ResponseEntity.ok().body(buildVersion);
+  }
+
+  @Operation(
+          summary = "Fetch Java Version REST API",
+          description = "REST API to fetch Java Version")
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @GetMapping("/java-version")
+  public ResponseEntity<String> getJavaVersion() {
+    return ResponseEntity.ok().body(environment.getProperty("java.version"));
   }
 }
