@@ -1,5 +1,6 @@
 package com.eazybytes.account.controller;
 
+import com.eazybytes.account.dto.AccountContactInfoDto;
 import com.eazybytes.account.dto.CustomerDto;
 import com.eazybytes.account.dto.ErrorResponseDto;
 import com.eazybytes.account.dto.ResponseDto;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
   private final AccountService accountService;
+  private final AccountContactInfoDto accountContactInfoDto;
 
   @Operation(
       summary = "Create Account REST API",
@@ -102,5 +104,14 @@ public class AccountController {
         .body(
             new ResponseDto(
                 String.valueOf(HttpStatus.OK.value()), HttpStatus.OK.getReasonPhrase()));
+  }
+
+  @Operation(
+      summary = "Fetch Contact Information REST API",
+      description = "REST API to fetch Contact Information")
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @GetMapping("/contact-info")
+  public ResponseEntity<AccountContactInfoDto> fetchContactInfo() {
+    return ResponseEntity.ok().body(accountContactInfoDto);
   }
 }

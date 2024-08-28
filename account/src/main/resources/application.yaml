@@ -16,3 +16,12 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+account:
+  message: 'Welcome to EazyBank Accounts'
+  contactDetails:
+    name: 'John Doe'
+    email: 'p3sQc@example.com'
+  onCallSupport:
+    - (0555) 555 55 55
+    - (044) 444 44 44
