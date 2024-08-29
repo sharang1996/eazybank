@@ -1,0 +1,8 @@
+card:
+  message: 'Welcome to EazyBank Card api'
+  contactDetails:
+    name: 'John Doe support'
+    email: 'p3sQc@example.com'
+  onCallSupport:
+    - (0555) 555 55 55
+    - (044) 444 44 44

@@ -1,0 +1,10 @@
+build:
+  version: 0.0.1-prod
+account:
+  message: 'Welcome to EazyBank Accounts Production api'
+  contactDetails:
+    name: 'John Doe Prod support'
+    email: 'p3sQc@example.com'
+  onCallSupport:
+    - (0555) 755 55 55
+    - (044) 644 44 44

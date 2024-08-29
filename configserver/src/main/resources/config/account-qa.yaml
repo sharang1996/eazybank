@@ -1,0 +1,10 @@
+build:
+  version: 0.0.1-qa
+account:
+  message: 'Welcome to EazyBank Accounts QA api'
+  contactDetails:
+    name: 'John Doe QA support'
+    email: 'p3sQc@example.com'
+  onCallSupport:
+    - (0555) 655 55 55
+    - (044) 544 44 44
