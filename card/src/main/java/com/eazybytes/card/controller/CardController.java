@@ -1,5 +1,6 @@
 package com.eazybytes.card.controller;
 
+import com.eazybytes.card.dto.CardContactInfoDto;
 import com.eazybytes.card.dto.CardDto;
 import com.eazybytes.card.dto.ErrorResponseDto;
 import com.eazybytes.card.dto.ResponseDto;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class CardController {
 
   private final CardService cardService;
+  private final CardContactInfoDto cardContactInfoDto;
 
   @Operation(summary = "Create Card REST API", description = "REST API to create new EazyBank Card")
   @ApiResponses({
@@ -101,5 +103,14 @@ public class CardController {
         .body(
             new ResponseDto(
                 String.valueOf(HttpStatus.OK.value()), HttpStatus.OK.getReasonPhrase()));
+  }
+
+  @Operation(
+          summary = "Fetch Contact Information REST API",
+          description = "REST API to fetch Contact Information")
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @GetMapping("/contact-info")
+  public ResponseEntity<CardContactInfoDto> getContactInfo() {
+    return ResponseEntity.ok().body(cardContactInfoDto);
   }
 }

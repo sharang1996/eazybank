@@ -16,7 +16,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+  config:
+    import:
+      - application_prod.yaml
+      - application_qa.yaml
+  profiles:
+    active: 'prod'
+build:
+  version: 0.0.1
 account:
   message: 'Welcome to EazyBank Accounts'
   contactDetails:

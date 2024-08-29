@@ -1,6 +1,7 @@
 package com.eazybytes.loan.controller;
 
 import com.eazybytes.loan.dto.ErrorResponseDto;
+import com.eazybytes.loan.dto.LoanContactInfoDto;
 import com.eazybytes.loan.dto.LoanDto;
 import com.eazybytes.loan.dto.ResponseDto;
 import com.eazybytes.loan.service.LoanService;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoanController {
 
   private final LoanService loanService;
+  private final LoanContactInfoDto loanContactInfoDto;
 
   @Operation(summary = "Create Loan REST API", description = "REST API to create new EazyBank Loan")
   @ApiResponses({
@@ -101,5 +103,14 @@ public class LoanController {
         .body(
             new ResponseDto(
                 String.valueOf(HttpStatus.OK.value()), HttpStatus.OK.getReasonPhrase()));
+  }
+
+  @Operation(
+          summary = "Fetch Contact Information REST API",
+          description = "REST API to fetch Contact Information")
+  @ApiResponse(responseCode = "200", description = "HTTP Status OK")
+  @GetMapping("/contact-info")
+  public ResponseEntity<LoanContactInfoDto> getContactInfo() {
+    return ResponseEntity.ok().body(loanContactInfoDto);
   }
 }

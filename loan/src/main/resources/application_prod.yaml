@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+build:
+  version: 0.0.1-prod
+loan:
+  message: 'Welcome to EazyBank Loan Production api'
+  contactDetails:
+    name: 'John Doe Prod support'
+    email: 'p3sQc@example.com'
+  onCallSupport:
+    - (0555) 755 55 55
+    - (044) 644 44 44
