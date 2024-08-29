@@ -5,11 +5,13 @@ spring:
   profiles:
     active: native
 
+#use the absolute file path as shown in the commented line (14) as an alternative
   cloud:
     config:
       server:
         native:
           search-locations: "classpath:/config"
+#          search-locations: "file:///Users/sharang/Code/eazybank/configserver/src/main/resources/config"
 
 
 server:
