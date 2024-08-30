@@ -4,15 +4,25 @@ spring:
 
   profiles:
     active: native
+#    active: git
 
 #use the absolute file path as shown in the commented line (14) as an alternative
   cloud:
     config:
       server:
+#        git:
+#          uri: https://github.com/eazybytes/eazybytes-config.git
+#          default-label: main
+#          timeout: 5
+#          clone-on-start: true
+#          force-pull: true
         native:
           search-locations: "classpath:/config"
 #          search-locations: "file:///Users/sharang/Code/eazybank/configserver/src/main/resources/config"
 
+encrypt:
+  # Would ideally be set as an environment variable
+  key: "B4uSHh4rsFl690FP"
 
 server:
   port: 8071
