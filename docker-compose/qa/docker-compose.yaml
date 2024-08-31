@@ -1,0 +1,60 @@
+services:
+  configserver:
+    image: "sharanggupta/configserver:2.0.0"
+    container_name: configserver-ms
+    ports:
+      - "8071:8071"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - eazybank
+  account:
+    image: "sharanggupta/account:2.0.0"
+    container_name: account-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - eazybank
+    environment:
+      SPRING_APPLICATION_NAME: account
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_PROFILES_ACTIVE: qa
+  loan:
+    image: "sharanggupta/loan:2.0.0"
+    container_name: loan-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - eazybank
+    environment:
+      SPRING_APPLICATION_NAME: loan
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_PROFILES_ACTIVE: qa
+  card:
+    image: "sharanggupta/card:2.0.0"
+    container_name: card-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - eazybank
+    environment:
+      SPRING_APPLICATION_NAME: card
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_PROFILES_ACTIVE: qa
+networks:
+  eazybank:
+    driver: "bridge"

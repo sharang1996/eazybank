@@ -20,9 +20,25 @@ spring:
 #          search-locations: "classpath:/config"
 #          search-locations: "file:///Users/sharang/Code/eazybank/configserver/src/main/resources/config"
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 encrypt:
   # Would ideally be set as an environment variable
   key: "B4uSHh4rsFl690FP"
 
 server:
   port: 8071
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      probes:
+        enabled: true
