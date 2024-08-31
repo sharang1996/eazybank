@@ -1,5 +1,5 @@
 create TABLE IF NOT EXISTS `card` (
-  `card_id` int AUTO_INCREMENT  PRIMARY KEY,
+  `card_id` int AUTO_INCREMENT,
   `mobile_number` varchar(10) NOT NULL,
   `card_number` varchar(16) NOT NULL,
   `card_type` varchar(20) NOT NULL,
