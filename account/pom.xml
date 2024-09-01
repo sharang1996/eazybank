@@ -119,7 +119,7 @@
                 <version>3.4.2</version>
                 <configuration>
                     <to>
-                        <image>sharanggupta/${project.artifactId}:2.0.0</image>
+                        <image>sharanggupta/${project.artifactId}:3.0.0</image>
                     </to>
                 </configuration>
             </plugin>
