@@ -1,5 +1,6 @@
 package dev.sharanggupta.account.mapper;
 
+import dev.sharanggupta.account.dto.CustomerDetailsDto;
 import dev.sharanggupta.account.dto.CustomerDto;
 import dev.sharanggupta.account.entity.Customer;
 
@@ -16,5 +17,12 @@ public class CustomerMapper {
     customer.setEmail(customerDto.getEmail());
     customer.setMobileNumber(customerDto.getMobileNumber());
     return customer;
+  }
+
+  public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer, CustomerDetailsDto customerDetailsDto) {
+    customerDetailsDto.setName(customer.getName());
+    customerDetailsDto.setEmail(customer.getEmail());
+    customerDetailsDto.setMobileNumber(customer.getMobileNumber());
+    return customerDetailsDto;
   }
 }
