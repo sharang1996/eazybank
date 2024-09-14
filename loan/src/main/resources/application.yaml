@@ -52,3 +52,8 @@ info:
     name: "loan"
     description: "Eazy Bank Loan Application"
     version: "1.0.0"
+logging:
+  level:
+    dev:
+      sharanggupta:
+        loan: DEBUG

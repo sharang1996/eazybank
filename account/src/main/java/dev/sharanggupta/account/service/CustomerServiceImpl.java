@@ -30,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
    * @return Customer Details based on a given mobileNumber
    */
   @Override
-  public CustomerDetailsDto fetchCustomerDetails(String mobileNumber) {
+  public CustomerDetailsDto fetchCustomerDetails(String mobileNumber, String correlationId) {
     Customer customer =
         customerRepository
             .findByMobileNumber(mobileNumber)
@@ -48,10 +48,10 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerMapper.mapToCustomerDetailsDto(customer, new CustomerDetailsDto());
     customerDetailsDto.setAccountsDto(AccountMapper.mapToAccountDto(account, new AccountDto()));
 
-    ResponseEntity<LoanDto> loansDtoResponseEntity = loanFeignClient.fetchLoan(mobileNumber);
+    ResponseEntity<LoanDto> loansDtoResponseEntity = loanFeignClient.fetchLoan(mobileNumber, correlationId);
     customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody());
 
-    ResponseEntity<CardDto> cardsDtoResponseEntity = cardFeignClient.fetchCard(mobileNumber);
+    ResponseEntity<CardDto> cardsDtoResponseEntity = cardFeignClient.fetchCard(mobileNumber, correlationId);
     customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody());
 
     return customerDetailsDto;

@@ -12,12 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Tag(
     name = "CRUD REST APIs for Customers in EazyBank",
     description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE customer details")
@@ -40,9 +42,11 @@ public class CustomerController {
                   content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
   @GetMapping("/fetch")
-  public ResponseEntity<CustomerDetailsDto> fetchCustomerDetails(@RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
+  public ResponseEntity<CustomerDetailsDto> fetchCustomerDetails(@RequestHeader("eazybank-correlation-id") String correlationId,
+          @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
                                                                  String mobileNumber) {
-    CustomerDetailsDto customerDetailsDto = customerService.fetchCustomerDetails(mobileNumber);
+    log.debug("correlationId: {}", correlationId);
+    CustomerDetailsDto customerDetailsDto = customerService.fetchCustomerDetails(mobileNumber, correlationId);
     return ResponseEntity.status(HttpStatus.OK).body(customerDetailsDto);
   }
 }

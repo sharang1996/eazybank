@@ -14,12 +14,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Tag(
     name = "CRUD REST APIs for Loans in EazyBank",
     description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE loans details")
@@ -64,7 +66,8 @@ public class LoanController {
   @GetMapping("/fetch")
   public ResponseEntity<LoanDto> fetchLoan(
       @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
-          String mobileNumber) {
+          String mobileNumber, @RequestHeader("eazybank-correlation-id") String correlationId) {
+    log.debug("correlationId: {}", correlationId);
     return ResponseEntity.ok().body(loanService.fetchLoan(mobileNumber));
   }
 
