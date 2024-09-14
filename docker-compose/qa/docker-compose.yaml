@@ -46,7 +46,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "sharanggupta/configserver:4.0.0"
+    image: "sharanggupta/configserver:5.0.0"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -64,7 +64,7 @@ services:
       service: microservice-base-config
 
   eurekaserver:
-    image: "sharanggupta/eurekaserver:4.0.0"
+    image: "sharanggupta/eurekaserver:5.0.0"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -84,10 +84,16 @@ services:
       SPRING_APPLICATION_NAME: eurekaserver
 
   account:
-    image: "sharanggupta/account:4.0.0"
+    image: "sharanggupta/account:5.0.0"
     container_name: account-ms
     ports:
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: account
       SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
@@ -101,10 +107,16 @@ services:
         condition: service_healthy
 
   loan:
-    image: "sharanggupta/loan:4.0.0"
+    image: "sharanggupta/loan:5.0.0"
     container_name: loan-ms
     ports:
       - "8090:8090"
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: loan
       SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
@@ -118,10 +130,16 @@ services:
         condition: service_healthy
 
   card:
-    image: "sharanggupta/card:4.0.0"
+    image: "sharanggupta/card:5.0.0"
     container_name: card-ms
     ports:
       - "9000:9000"
+    healthcheck:
+      test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: card
       SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
@@ -130,6 +148,26 @@ services:
       service: microservice-eureka-config
     depends_on:
       cardsdb:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+
+  gatewayserver:
+    image: "sharanggupta/gatewayserver:5.0.0"
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    environment:
+      SPRING_APPLICATION_NAME: gatewayserver
+    extends:
+      file: common-config.yaml
+      service: microservice-eureka-config
+    depends_on:
+      account:
+        condition: service_healthy
+      card:
+        condition: service_healthy
+      loan:
         condition: service_healthy
       configserver:
         condition: service_healthy
